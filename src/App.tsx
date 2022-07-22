@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import AxiosAdapter from "./infra/AxiosAdapter";
+import UserService from "./infra/UserService";
 
-function App() {
+export default function App() {
+  const httpServer = new AxiosAdapter();
+  const userService = new UserService(httpServer);
+
+  async function getUser() {
+    const response = await userService.getUser("10");
+    console.table("user response", response);
+  }
+
+  async function createUser() {
+    const response = await userService.createUser({
+      name: "Example test",
+      email: "example.example@example.com",
+      cellphone: "099876534",
+    });
+    console.table("user response", response);
+  }
+
+  async function updateUser() {
+    const response = await userService.updateUser({
+      name: "User corerctly name",
+      email: "correctly@text.com",
+      cellphone: "966453628",
+    });
+    console.table("user response", response);
+  }
+
+  async function deleteUser() {
+    const { deleted } = await userService.deleteUser("10");
+    console.table("user response", deleted);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <button onClick={() => getUser()}>GET</button>
+      <button onClick={() => createUser()}>POST</button>
+      <button onClick={() => updateUser()}>PUT</button>
+      <button onClick={() => deleteUser()}>DELETE</button>
     </div>
   );
 }
-
-export default App;
